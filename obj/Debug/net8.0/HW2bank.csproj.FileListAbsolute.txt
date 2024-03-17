@@ -1,0 +1,14 @@
+C:\Users\destr\Desktop\HW2bank\bin\Debug\net8.0\HW2bank.exe
+C:\Users\destr\Desktop\HW2bank\bin\Debug\net8.0\HW2bank.deps.json
+C:\Users\destr\Desktop\HW2bank\bin\Debug\net8.0\HW2bank.runtimeconfig.json
+C:\Users\destr\Desktop\HW2bank\bin\Debug\net8.0\HW2bank.dll
+C:\Users\destr\Desktop\HW2bank\bin\Debug\net8.0\HW2bank.pdb
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.AssemblyInfoInputs.cache
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.AssemblyInfo.cs
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.csproj.CoreCompileInputs.cache
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.dll
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\refint\HW2bank.dll
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.pdb
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\HW2bank.genruntimeconfig.cache
+C:\Users\destr\Desktop\HW2bank\obj\Debug\net8.0\ref\HW2bank.dll
