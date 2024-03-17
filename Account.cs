@@ -65,7 +65,7 @@ namespace HW2bank
 
         public IEnumerable<Transaction> GetTransactions()
         { 
-            return transactions;
+            return transactions.AsReadOnly();
         }
 
         

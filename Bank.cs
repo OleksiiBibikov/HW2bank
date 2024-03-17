@@ -67,12 +67,12 @@ namespace HW2bank
 
         public IEnumerable<Client> GetAllClients() 
         {
-            return clients;
+            return clients.AsReadOnly();
         }
 
         public IEnumerable<Account> GetAllAccounts() 
         { 
-            return accounts;
+            return accounts.AsReadOnly();
         }
 
         public decimal GetTotalBalanceOfClient(string firstName, string lastName)
