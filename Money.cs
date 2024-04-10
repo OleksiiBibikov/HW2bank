@@ -13,6 +13,10 @@ namespace HW2bank
 
         public Money(decimal uah) 
         {
+            if (uah < 0)
+            {
+                throw new ArgumentException(nameof(uah), "Amount must be bigger than 0");
+            }
             UAH = uah;  
         }
 
