@@ -39,6 +39,19 @@ namespace HW2bank
             return account;
         }
 
+        public async Task<Account> GetAccountAsync(decimal initialBalance, decimal interestRate, Client client)
+        {
+            var clientCheck = await Task.Run(() => clients.FirstOrDefault(c => c.FirstName == client.FirstName && c.LastName == client.LastName));
+            if (clientCheck == null) 
+            {
+                throw new InvalidOperationException("Client not found");
+            }
+            var account = new Account(initialBalance, interestRate);
+            accounts.Add(account);
+            clientCheck.AddAccount(account);
+            return account;
+        }
+
         public void DoTransfer(Guid sourceAccountId, Guid destinationAccountId, Money amount)
         {
             var sourceAccount = this.accounts.FirstOrDefault(a => a.Id == sourceAccountId);
@@ -49,6 +62,17 @@ namespace HW2bank
                 throw new InvalidOperationException("One of account is not found");
             }
             sourceAccount.Transfer(destinationAccount, amount);
+        }
+
+        public async Task DoTransferAsync(Guid sourceAccountId, Guid destinataionAccountId, Money amount)
+        {
+            var sourceAccount = accounts.FirstOrDefault(a => a.Id == sourceAccountId);
+            var destinationAccount = accounts.FirstOrDefault(b => b.Id ==  destinataionAccountId);
+            if (sourceAccount == null || destinationAccount == null)
+            {
+                throw new InvalidOperationException("One of account is not found");
+            }
+            await sourceAccount.TransferAsync(destinationAccount, amount);
         }
 
         public void ShowTransactionHistory()
