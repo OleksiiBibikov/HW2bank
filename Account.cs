@@ -46,6 +46,13 @@ namespace HW2bank
             transactions.Add(new Transaction(amount, TransactionType.Deposit, DateTime.Now, this.Id, this.Id));
         }
 
+        public async Task DepositAsync(Money amount)
+        {
+            await Task.Delay(100);
+            balance = balance.Add(amount);
+            transactions.Add(new Transaction(amount, TransactionType.Deposit, DateTime.Now, this.Id, this.Id));
+        }
+
         public void Withdraw(Money amount)
         {
             if (amount.UAH < 0)
@@ -60,6 +67,21 @@ namespace HW2bank
             transactions.Add(new Transaction(amount, DateTime.Now, this.Id, this.Id));
         }
 
+        public async Task WithdrawAsync(Money amount)
+        {
+            if (amount.UAH < 0)
+            {
+                throw new ArgumentException(nameof(amount), "Deposit amount cannot be less than 0");
+            }
+            if (amount.UAH > balance.UAH)
+            {
+                throw new InvalidOperationException($"Not enough money");
+            }
+            await Task.Delay(100);
+            balance = balance.Subtract(amount);
+            transactions.Add(new Transaction(amount, DateTime.Now, this.Id, this.Id));
+        }
+
         public void Transfer(Account destination, Money amount)
         {
             if (this.Balance.UAH >= amount.UAH) 
@@ -68,6 +90,19 @@ namespace HW2bank
                 destination.Deposit(amount);
             }
             else
+            {
+                throw new InvalidOperationException("Not enough money for transfer");
+            }
+        }
+
+        public async Task TransferAsync(Account destination, Money amount)
+        {
+            if (this.Balance.UAH >= amount.UAH)
+            {
+                await this.WithdrawAsync(amount);
+                await destination.DepositAsync(amount);
+            }
+            else 
             {
                 throw new InvalidOperationException("Not enough money for transfer");
             }
