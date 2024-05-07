@@ -12,25 +12,38 @@ namespace HW2bank
     {
         public Guid Id { get; private set; }
         private Money balance;
-        [Range(0, double.MaxValue, ErrorMessage = "Interest rate out of range")] public decimal InterestRate { get; private set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Interest rate out of range")] 
+        public decimal InterestRate { get; private set; }
         private List<Transaction> transactions;
 
         public Account(decimal initBalance, decimal interestRate) 
         { 
+            this.Id = Guid.NewGuid();
+            InitializeAccount(initBalance, interestRate);
+        }
+        
+        public Account(Guid id, decimal initBalance, decimal interestRate)
+        {
+            this.Id = id;
+            InitializeAccount(initBalance, interestRate);
+        }
+
+        private void InitializeAccount(decimal initBalance, decimal interestRate)
+        {
             if (initBalance < 0)
             {
-                throw new ArgumentException(nameof(initBalance), "Initial balance cannot be less than 0");
+                throw new ArgumentException("Initial balance cannot be less than 0", nameof(initBalance));
             }
             if (interestRate < 0)
             {
-                throw new ArgumentException(nameof(interestRate), "Interest rate cannot be less than 0");
+                throw new ArgumentException("Interest rate cannot be less than 0", nameof(interestRate));
             }
-            Id = Guid.NewGuid();
+
             balance = new Money(initBalance);
             InterestRate = interestRate;
             transactions = new List<Transaction>();
         }
-        
+
         public Money Balance 
         { 
             get { return balance; } 

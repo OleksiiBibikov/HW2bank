@@ -9,99 +9,76 @@ namespace HW2bank
 {
     public class Bank
     {
-        public List<Client> clients { get; private set; }
-        public List<Account> accounts { get; private set; }
+        private ClientRepository clientRepository;
+        private AccountRepository accountRepository;
 
-        public Bank()
+        public Bank(string connectionString)
         {
-            clients = new List<Client>();
-            accounts = new List<Account>();
+            clientRepository = new ClientRepository(connectionString);
+            accountRepository = new AccountRepository(connectionString);
         }
 
         public void AddClient(string firstName, string lastName)
         {
             var client = new Client(firstName, lastName);
-            clients.Add(client);
+            clientRepository.AddClient(client);
         }
 
-        public Account GetAccount(decimal initialBalance, decimal interestRate, Client client) 
+        public Account GetAccount(decimal initialBalance, decimal interestRate, int clientId)
         {
-            var clientCheck = clients.FirstOrDefault(c => c.FirstName == client.FirstName && c.LastName == client.LastName);
-            if (clientCheck == null) 
+            var client = clientRepository.GetClient(clientId);
+            if (client == null)
             {
                 throw new InvalidOperationException("Client not found");
             }
 
             var account = new Account(initialBalance, interestRate);
-            accounts.Add(account);
-            clientCheck.AddAccount(account);
-
-            return account;
-        }
-
-        public async Task<Account> GetAccountAsync(decimal initialBalance, decimal interestRate, Client client)
-        {
-            var clientCheck = await Task.Run(() => clients.FirstOrDefault(c => c.FirstName == client.FirstName && c.LastName == client.LastName));
-            if (clientCheck == null) 
-            {
-                throw new InvalidOperationException("Client not found");
-            }
-            var account = new Account(initialBalance, interestRate);
-            accounts.Add(account);
-            clientCheck.AddAccount(account);
+            accountRepository.AddAccount(account, clientId);
             return account;
         }
 
         public void DoTransfer(Guid sourceAccountId, Guid destinationAccountId, Money amount)
         {
-            var sourceAccount = this.accounts.FirstOrDefault(a => a.Id == sourceAccountId);
-            var destinationAccount = this.accounts.FirstOrDefault(b => b.Id == destinationAccountId);
+            var sourceAccount = accountRepository.GetAccount(sourceAccountId);
+            var destinationAccount = accountRepository.GetAccount(destinationAccountId);
 
             if (sourceAccount == null || destinationAccount == null)
             {
-                throw new InvalidOperationException("One of account is not found");
+                throw new InvalidOperationException("One of the accounts is not found");
             }
+
             sourceAccount.Transfer(destinationAccount, amount);
+            accountRepository.UpdateAccount(sourceAccount);
+            accountRepository.UpdateAccount(destinationAccount);
         }
 
-        public async Task DoTransferAsync(Guid sourceAccountId, Guid destinataionAccountId, Money amount)
+        //public void ShowTransactionHistory()
+        //{
+        //    var accounts = accountRepository.GetAllAccounts();
+        //    foreach (var account in accounts)
+        //    {
+        //        Console.WriteLine($"History of account: {account.Id}:");
+        //        foreach (var transaction in account.GetTransactions())
+        //        {
+        //            Console.WriteLine($"{transaction.DateTime:g}: {transaction.Type} {transaction.Amount.UAH} UAH");
+        //        }
+        //        Console.WriteLine();
+        //    }
+        //}
+
+        //public IEnumerable<Client> GetAllClients()
+        //{
+        //    return clientRepository.GetAllClients();
+        //}
+
+        //public IEnumerable<Account> GetAllAccounts()
+        //{
+        //    return accountRepository.GetAllAccounts();
+        //}
+
+        public decimal GetTotalBalanceOfClient(int clientId)
         {
-            var sourceAccount = accounts.FirstOrDefault(a => a.Id == sourceAccountId);
-            var destinationAccount = accounts.FirstOrDefault(b => b.Id ==  destinataionAccountId);
-            if (sourceAccount == null || destinationAccount == null)
-            {
-                throw new InvalidOperationException("One of account is not found");
-            }
-            await sourceAccount.TransferAsync(destinationAccount, amount);
-        }
-
-        public void ShowTransactionHistory()
-        {
-            foreach (var account in accounts) 
-            {
-                Console.WriteLine($"History of account: {account.Id}:");
-                foreach (var transaction in account.GetTransactions())
-                {
-                    Console.WriteLine($"{transaction.DateTime:g}: {transaction.Type} {transaction.Amount.UAH} UAH");
-                }
-                Console.WriteLine();
-            }
-        }
-
-
-        public IEnumerable<Client> GetAllClients() 
-        {
-            return clients.AsReadOnly();
-        }
-
-        public IEnumerable<Account> GetAllAccounts() 
-        { 
-            return accounts.AsReadOnly();
-        }
-
-        public decimal GetTotalBalanceOfClient(string firstName, string lastName)
-        {
-            var client = clients.FirstOrDefault(c => c.FirstName == firstName && c.LastName == lastName);
+            var client = clientRepository.GetClient(clientId);
             if (client == null)
             {
                 throw new InvalidOperationException("Client not found");
@@ -109,4 +86,5 @@ namespace HW2bank
             return client.GetTotalBalance();
         }
     }
+
 }

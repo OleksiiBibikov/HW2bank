@@ -9,7 +9,7 @@ namespace HW2bank
 {
     public class Client
     {
-
+        public int ClientId { get; set; }
         [Required] public string FirstName { get; set; }
         [Required] public string LastName { get; set; }
         private List<Account> accounts;

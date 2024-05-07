@@ -1,0 +1,20 @@
+CREATE DATABASE BankDB;
+GO
+
+USE BankDB;
+GO
+
+CREATE TABLE Clients (
+    ClientId INT PRIMARY KEY IDENTITY(1,1),
+    FirstName NVARCHAR(100) NOT NULL,
+    LastName NVARCHAR(100) NOT NULL
+);
+GO
+
+CREATE TABLE Accounts (
+    AccountId INT PRIMARY KEY IDENTITY(1,1),
+    ClientId INT NOT NULL,
+    Balance DECIMAL(18, 2) NOT NULL,
+    FOREIGN KEY (ClientId) REFERENCES Clients(ClientId)
+);
+GO
